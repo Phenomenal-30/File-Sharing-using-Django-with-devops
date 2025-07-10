@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<h1 class="text-center mb-4">Welcome to Secure File Sharing System</h1>
+
+<div class="d-flex flex-column align-items-center">
+    <a href="/ops-register/" class="btn btn-primary mb-2">Register as OPS</a>
+    <a href="/client-register/" class="btn btn-primary mb-2">Register as Client</a>
+    <a href="/ops-login/" class="btn btn-success mb-2">Login as OPS</a>
+    <a href="/client-login/" class="btn btn-success mb-2">Login as Client</a>
+</div>
+{% endblock %}

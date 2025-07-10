@@ -1,0 +1,6 @@
+Django>=5.2.3
+djangorestframework
+djangorestframework-simplejwt
+gunicorn
+python-decouple
+cryptography

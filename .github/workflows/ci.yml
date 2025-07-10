@@ -1,0 +1,59 @@
+name: Django CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: file_share_db
+          POSTGRES_USER: user
+          POSTGRES_PASSWORD: password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.11
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r file_share_project/requirements.txt
+
+    - name: Wait for Postgres
+      run: |
+        until pg_isready -h localhost -p 5432; do
+          sleep 1
+        done
+
+    - name: Run migrations
+      run: |
+        python file_share_project/manage.py migrate
+
+    - name: Run tests
+      run: |
+        python file_share_project/manage.py test
+
+    - name: Lint with flake8
+      run: |
+        pip install flake8
+        flake8 file_share_project fileshare home
